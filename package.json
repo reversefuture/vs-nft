@@ -8,9 +8,15 @@
     "build": "tsc && vite build",
     "preview": "vite preview --host 0.0.0.0 --port 12000",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "setup": "./scripts/setup-env.sh",
     "compile": "hardhat compile",
     "deploy:sepolia": "hardhat run scripts/deploy.ts --network sepolia",
-    "test:contract": "hardhat test"
+    "verify:contract": "hardhat run scripts/verify-contract.ts --network sepolia",
+    "check:balance": "hardhat run scripts/check-balance.ts --network sepolia",
+    "test:contract": "hardhat test",
+    "docker:build": "docker build -t vs-nft .",
+    "docker:run": "docker run -p 3000:80 vs-nft",
+    "docker:compose": "docker-compose up -d"
   },
   "dependencies": {
     "react": "^18.2.0",
