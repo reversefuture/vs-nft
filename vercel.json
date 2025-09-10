@@ -1,15 +1,23 @@
 {
-  "version": 2,
+  "version": 3,
   "builds": [
+    {
+      "src": "dist/**",
+      "use": "@vercel/static"
+    },
     {
       "src": "api/upload.ts",
       "use": "@vercel/node"
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/upload",
-      "dest": "/api/upload.ts"
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
