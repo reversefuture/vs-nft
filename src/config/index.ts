@@ -14,7 +14,7 @@ const AppConfig = {
   PINATA_API_KEY,
   PINATA_API_SECRET,
   PINATA_API_JWT,
-  VITE_UPLOAD_URL,
+  VITE_UPLOAD_URL: VITE_UPLOAD_URL || "",
 };
 
 export default AppConfig;
