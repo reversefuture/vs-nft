@@ -11,10 +11,6 @@ export default defineConfig(({ mode }) => ({
     }),
     react(),
   ],
-  base: '/', // Required for Vercel
-  build: {
-    outDir: 'dist' // Ensure this is 'dist'
-  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
