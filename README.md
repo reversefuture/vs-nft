@@ -1,199 +1,57 @@
-# NFT Post Minter
+# Sample Hardhat 3 Beta Project (`mocha` and `ethers`)
 
-A decentralized application (dApp) for creating unique NFTs from posts containing images and text. Built with React, TypeScript, Ant Design, and Tailwind CSS.
+This project showcases a Hardhat 3 Beta project using `mocha` for tests and the `ethers` library for Ethereum interactions.
 
-## Features
+To learn more about the Hardhat 3 Beta, please visit the [Getting Started guide](https://hardhat.org/docs/getting-started#getting-started-with-hardhat-3). To share your feedback, join our [Hardhat 3 Beta](https://hardhat.org/hardhat3-beta-telegram-group) Telegram group or [open an issue](https://github.com/NomicFoundation/hardhat/issues/new) in our GitHub issue tracker.
 
-- 🎨 **Post Creation**: Upload images and add text to create posts
-- 🔗 **Content Hash Generation**: MD5 hash ensures same content generates same NFT
-- 🌐 **Ethereum Integration**: Deploy on Sepolia testnet
-- 📦 **IPFS Storage**: Decentralized storage for images and metadata
-- 🦊 **MetaMask Integration**: Seamless wallet connection
-- ⚡ **Duplicate Prevention**: Same content hash prevents duplicate NFTs
-- 🎯 **ERC-721 Standard**: Compatible with all NFT marketplaces
+## Project Overview
 
-## Technology Stack
+This example project includes:
 
-### Frontend
-- **React 18** with TypeScript
-- **Ant Design** for UI components
-- **Tailwind CSS** for styling
-- **Vite** for build tooling
-
-### Blockchain
-- **Ethereum Sepolia Testnet**
-- **ethers.js** for Web3 interactions
-- **ERC-721** smart contract standard
-- **OpenZeppelin** contracts
-
-### Storage
-- **IPFS** via Pinata for decentralized storage
-- **MD5 hashing** for content deduplication
-
-## Smart Contract
-
-The project includes a custom ERC-721 smart contract (`NFTPostMinter.sol`) with features:
-
-- Content hash deduplication
-- Metadata URI storage
-- Token ID to content hash mapping
-- Ownership tracking
-- Event emission for minting
-
-### Contract Address
-```
-Sepolia Testnet: 0x0000000000000000000000000000000000000000
-```
-*Note: Replace with actual deployed contract address*
-
-## Setup Instructions
-
-### Prerequisites
-- Node.js 18+
-- MetaMask browser extension
-- Sepolia testnet ETH (get from faucet)
-
-### Installation
-
-1. **Clone and install dependencies**
-```bash
-pnpm install
-```
-
-2. **Configure IPFS (Pinata)**
-- Sign up at [Pinata](https://pinata.cloud/)
-- Get your JWT token
-- Update `src/lib/ipfs.ts` with your token
-
-3. **Deploy Smart Contract**
-- Deploy `contracts/NFTPostMinter.sol` to Sepolia testnet
-- Update contract address in `src/lib/web3.ts`
-
-4. **Start development server**
-```bash
-pnpm run dev
-```
+- A simple Hardhat configuration file.
+- Foundry-compatible Solidity unit tests.
+- TypeScript integration tests using `mocha` and ethers.js
+- Examples demonstrating how to connect to different types of networks, including locally simulating OP mainnet.
 
 ## Usage
 
-1. **Connect Wallet**: Click "Connect Wallet" and approve MetaMask connection
-2. **Upload Image**: Drag and drop or select an image file (max 10MB)
-3. **Enter Text**: Add your post content (max 500 characters)
-4. **Generate Hash**: Create unique content hash for deduplication
-5. **Mint NFT**: Submit transaction to create your NFT
+### Running Tests
 
-## How It Works
+To run all the tests in the project, execute the following command:
 
-### Content Hash Generation
-```typescript
-const imageHash = MD5(imageBuffer);
-const textHash = MD5(postText);
-const contentHash = MD5(imageHash + textHash);
-```
-
-### Duplicate Prevention
-- Same image + same text = same content hash
-- Smart contract checks if hash exists before minting
-- Returns existing token ID if duplicate found
-
-### NFT Metadata Structure
-```json
-{
-  "name": "NFT Post #12345678",
-  "description": "Your post content",
-  "image": "ipfs://QmYourImageHash",
-  "attributes": [
-    {"trait_type": "Type", "value": "Post"},
-    {"trait_type": "Content Hash", "value": "abc123..."},
-    {"trait_type": "Created", "value": "2024-01-01"}
-  ]
-}
-```
-
-## Deployment
-
-### Vercel Deployment
-1. Push code to GitHub repository
-2. Connect repository to Vercel
-3. Deploy with default settings
-4. Update environment variables if needed
-
-### Environment Variables
-```env
-VITE_PINATA_JWT=your_pinata_jwt_token
-VITE_CONTRACT_ADDRESS=deployed_contract_address
-```
-
-## Smart Contract Deployment
-
-### Using Hardhat
-```bash
-npx hardhat compile
-npx hardhat deploy --network sepolia
-```
-
-### Using Remix
-1. Copy contract code to Remix IDE
-2. Compile with Solidity 0.8.19+
-3. Deploy to Sepolia testnet
-4. Verify contract on Etherscan
-
-## Testing
-
-### Frontend Testing
-```bash
-pnpm run test
-```
-
-### Contract Testing
-```bash
+```shell
 npx hardhat test
 ```
 
-## Security Considerations
+You can also selectively run the Solidity or `mocha` tests:
 
-- ✅ Input validation for images and text
-- ✅ File size limits (10MB max)
-- ✅ Content hash verification
-- ✅ Duplicate prevention
-- ✅ Proper error handling
-- ✅ MetaMask security practices
+```shell
+npx hardhat test solidity
+npx hardhat test mocha
+```
 
-## Roadmap
+### Make a deployment to Sepolia
 
-- [ ] Mainnet deployment
-- [ ] Batch minting support
-- [ ] Advanced metadata attributes
-- [ ] Social sharing features
-- [ ] NFT marketplace integration
-- [ ] Mobile app development
+This project includes an example Ignition module to deploy the contract. You can deploy this module to a locally simulated chain or to Sepolia.
 
-## Contributing
+To run the deployment to a local chain:
 
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open Pull Request
+```shell
+npx hardhat ignition deploy ignition/modules/Counter.ts
+```
 
-## License
+To run the deployment to Sepolia, you need an account with funds to send the transaction. The provided Hardhat configuration includes a Configuration Variable called `SEPOLIA_PRIVATE_KEY`, which you can use to set the private key of the account you want to use.
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+You can set the `SEPOLIA_PRIVATE_KEY` variable using the `hardhat-keystore` plugin or by setting it as an environment variable.
 
-## Support
+To set the `SEPOLIA_PRIVATE_KEY` config variable using `hardhat-keystore`:
 
-- 📧 Email: support@nftpostminter.com
-- 🐦 Twitter: [@NFTPostMinter](https://twitter.com/NFTPostMinter)
-- 💬 Discord: [Join our community](https://discord.gg/nftpostminter)
+```shell
+npx hardhat keystore set SEPOLIA_PRIVATE_KEY
+```
 
-## Acknowledgments
+After setting the variable, you can run the deployment with the Sepolia network:
 
-- OpenZeppelin for secure smart contract templates
-- Ant Design for beautiful UI components
-- Pinata for IPFS infrastructure
-- MetaMask for Web3 wallet integration
-- Ethereum community for development tools
-
----
-
-Built with ❤️ by the NFT Post Minter team
+```shell
+npx hardhat ignition deploy --network sepolia ignition/modules/Counter.ts
+```

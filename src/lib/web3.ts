@@ -1,8 +1,9 @@
-import { ethers } from 'ethers';
+import { ethers } from "ethers";
 
 // Sepolia testnet configuration
-export const SEPOLIA_CHAIN_ID = '0xaa36a7';
-export const SEPOLIA_RPC_URL = 'https://sepolia.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161';
+export const SEPOLIA_CHAIN_ID = "0xaa36a7";
+export const SEPOLIA_RPC_URL =
+  "https://sepolia.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161";
 
 // NFT Contract ABI (simplified ERC-721)
 export const NFT_CONTRACT_ABI = [
@@ -12,11 +13,12 @@ export const NFT_CONTRACT_ABI = [
   "function balanceOf(address owner) public view returns (uint256)",
   "function getTokenByContentHash(string memory contentHash) public view returns (uint256)",
   "function contentHashExists(string memory contentHash) public view returns (bool)",
-  "event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)"
+  "event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)",
 ];
 
 // Deployed contract address (you'll need to deploy this)
-export const NFT_CONTRACT_ADDRESS = "0x0000000000000000000000000000000000000000"; // Replace with actual deployed address
+export const NFT_CONTRACT_ADDRESS =
+  "0x8355678CAF8332755fA14C1479F13634f52EC598"; // Replace with actual deployed address
 
 export class Web3Service {
   private provider: ethers.BrowserProvider | null = null;
@@ -25,27 +27,31 @@ export class Web3Service {
 
   async connectWallet(): Promise<string> {
     if (!window.ethereum) {
-      throw new Error('MetaMask not found. Please install MetaMask.');
+      throw new Error("MetaMask not found. Please install MetaMask.");
     }
 
     try {
       // Request account access
-      await window.ethereum.request({ method: 'eth_requestAccounts' });
-      
+      await window.ethereum.request({ method: "eth_requestAccounts" });
+
       // Switch to Sepolia testnet
       await this.switchToSepolia();
-      
+
       this.provider = new ethers.BrowserProvider(window.ethereum);
       this.signer = await this.provider.getSigner();
-      
+
       const address = await this.signer.getAddress();
-      
+
       // Initialize contract
-      this.contract = new ethers.Contract(NFT_CONTRACT_ADDRESS, NFT_CONTRACT_ABI, this.signer);
-      
+      this.contract = new ethers.Contract(
+        NFT_CONTRACT_ADDRESS,
+        NFT_CONTRACT_ABI,
+        this.signer
+      );
+
       return address;
     } catch (error) {
-      console.error('Failed to connect wallet:', error);
+      console.error("Failed to connect wallet:", error);
       throw error;
     }
   }
@@ -53,7 +59,7 @@ export class Web3Service {
   private async switchToSepolia(): Promise<void> {
     try {
       await window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
+        method: "wallet_switchEthereumChain",
         params: [{ chainId: SEPOLIA_CHAIN_ID }],
       });
     } catch (switchError: unknown) {
@@ -61,18 +67,18 @@ export class Web3Service {
       const error = switchError as { code?: number };
       if (error.code === 4902) {
         await window.ethereum.request({
-          method: 'wallet_addEthereumChain',
+          method: "wallet_addEthereumChain",
           params: [
             {
               chainId: SEPOLIA_CHAIN_ID,
-              chainName: 'Sepolia Test Network',
+              chainName: "Sepolia Test Network",
               nativeCurrency: {
-                name: 'ETH',
-                symbol: 'ETH',
+                name: "ETH",
+                symbol: "ETH",
                 decimals: 18,
               },
               rpcUrls: [SEPOLIA_RPC_URL],
-              blockExplorerUrls: ['https://sepolia.etherscan.io/'],
+              blockExplorerUrls: ["https://sepolia.etherscan.io/"],
             },
           ],
         });
@@ -84,44 +90,44 @@ export class Web3Service {
 
   async mintNFT(tokenURI: string, contentHash: string): Promise<string> {
     if (!this.contract || !this.signer) {
-      throw new Error('Wallet not connected');
+      throw new Error("Wallet not connected");
     }
 
     try {
       const address = await this.signer.getAddress();
       const tx = await this.contract.mintNFT(address, tokenURI, contentHash);
       const receipt = await tx.wait();
-      
+
       return receipt.hash;
     } catch (error) {
-      console.error('Failed to mint NFT:', error);
+      console.error("Failed to mint NFT:", error);
       throw error;
     }
   }
 
   async checkContentHashExists(contentHash: string): Promise<boolean> {
     if (!this.contract) {
-      throw new Error('Contract not initialized');
+      throw new Error("Contract not initialized");
     }
 
     try {
       return await this.contract.contentHashExists(contentHash);
     } catch (error) {
-      console.error('Failed to check content hash:', error);
+      console.error("Failed to check content hash:", error);
       return false;
     }
   }
 
   async getTokenByContentHash(contentHash: string): Promise<number> {
     if (!this.contract) {
-      throw new Error('Contract not initialized');
+      throw new Error("Contract not initialized");
     }
 
     try {
       const tokenId = await this.contract.getTokenByContentHash(contentHash);
       return Number(tokenId);
     } catch (error) {
-      console.error('Failed to get token by content hash:', error);
+      console.error("Failed to get token by content hash:", error);
       throw error;
     }
   }
@@ -132,7 +138,7 @@ export class Web3Service {
 
   async getAddress(): Promise<string> {
     if (!this.signer) {
-      throw new Error('Wallet not connected');
+      throw new Error("Wallet not connected");
     }
     return await this.signer.getAddress();
   }
@@ -145,7 +151,10 @@ export const web3Service = new Web3Service();
 declare global {
   interface Window {
     ethereum?: {
-      request: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
+      request: (args: {
+        method: string;
+        params?: unknown[];
+      }) => Promise<unknown>;
     };
   }
 }

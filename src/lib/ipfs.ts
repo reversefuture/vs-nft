@@ -1,4 +1,4 @@
-import AppConfig from "@/config";
+import AppConfig from "@/config/index";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 
@@ -12,16 +12,15 @@ export class IPFSService {
 
   async uploadImage(file: File): Promise<string> {
     if (!file) {
-      throw new Error('No file provided for upload');
+      throw new Error("No file provided for upload");
     }
     console.log(">> file received:", file.name, file.size, file.type);
     const formData = new FormData();
     formData.append("file", file);
-    console.log(">> formData entries:");
 
     try {
       const response = await axios.post(
-        `/api/upload`,
+        `${AppConfig.VITE_UPLOAD_URL}/api/upload`,
         formData,
         {
           headers: {
@@ -29,9 +28,9 @@ export class IPFSService {
           },
         }
       );
-      console.log(">> upload res: ", response)
+      console.log(">> upload res: ", response);
 
-      return response?.data;
+      return response?.data?.blob?.url;
     } catch (error) {
       console.error("Failed to upload image to vercel blob:", error);
       return null;
@@ -40,12 +39,12 @@ export class IPFSService {
 
   async uploadImage2(file: File): Promise<string> {
     if (!file) {
-      throw new Error('No file provided for upload');
+      throw new Error("No file provided for upload");
     }
     console.log(">> file received:", file.name, file.size, file.type);
     const formData = new FormData();
     formData.append("file", file);
-    const imageName = `NFT_Image_${Date.now()}`
+    const imageName = `NFT_Image_${Date.now()}`;
     const metadata = JSON.stringify({
       name: imageName,
       keyvalues: {
@@ -53,7 +52,6 @@ export class IPFSService {
       },
     });
     formData.append("pinataMetadata", metadata);
-    console.log(">> formData entries:");
 
     try {
       const response = await axios.post(
