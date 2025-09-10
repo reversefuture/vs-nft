@@ -17,6 +17,7 @@ export class IPFSService {
     console.log(">> file received:", file.name, file.size, file.type);
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("fileName", `${file.name}-${Date.now()}`);
 
     try {
       const response = await axios.post(
